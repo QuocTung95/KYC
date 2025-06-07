@@ -9,9 +9,9 @@ async function bootstrap() {
   await connection.runMigrations();
   // Enable CORS
   app.enableCors({
-    origin: ['https://kyc-aslcmie4m-tungdevs-projects.vercel.app'],
+    origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-    credentials: true,
+    credentials: false,
     allowedHeaders: ['Content-Type', 'Authorization'],
   });
 
