@@ -6,7 +6,7 @@ const Home = () => {
   return (
     <div className="mx-auto max-w-4xl">
       <Card className="shadow-md">
-        <Title level={2}>Welcome to Your App</Title>
+        <Title level={2}>Welcome to Your Appffff</Title>
         <Paragraph>This is a starter template with:</Paragraph>
         <ul className="list-inside list-disc space-y-2">
           <li>React 18 with TypeScript</li>
