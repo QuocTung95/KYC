@@ -9,9 +9,20 @@ async function bootstrap() {
   await connection.runMigrations();
   // Enable CORS
   app.enableCors({
-    origin: '*',
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true); // allow some request without origin (Postman, server-side...)
+
+      const allowedPattern =
+        /^https:\/\/kyc-[\w-]+\.tungdevs-projects\.vercel\.app$/;
+
+      if (allowedPattern.test(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-    credentials: false,
+    credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization'],
   });
 
