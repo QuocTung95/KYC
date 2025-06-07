@@ -11,10 +11,7 @@ const App = () => {
   return (
     <AppInitializer>
       <div className="min-h-screen bg-gray-50">
-        <Header
-          collapsed={collapsed}
-          onToggle={() => setCollapsed(!collapsed)}
-        />
+        <Header collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />
         <Suspense
           fallback={
             <div className="flex justify-center items-center h-screen">

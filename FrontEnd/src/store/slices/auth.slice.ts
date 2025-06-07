@@ -54,7 +54,7 @@ export const authSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(login.fulfilled, (state, action) => {
+      .addCase(login.fulfilled, (state) => {
         state.loading = false;
         state.error = null;
       })

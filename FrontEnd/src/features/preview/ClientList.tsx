@@ -32,7 +32,7 @@ const ClientList = () => {
     dispatch(setPagination({ current: 1 }));
   };
 
-  const handleTableChange = (newPagination: any, tableFilters: any, sorter: any) => {
+  const handleTableChange = (newPagination: any, _tableFilters: any, sorter: any) => {
     dispatch(
       setPagination({
         current: newPagination.current,

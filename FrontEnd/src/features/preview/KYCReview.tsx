@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Card, Descriptions, Button, Space, Typography, Modal, Input, message, Tag, Divider } from "antd";
+import { Card, Descriptions, Button, Space, Typography, Modal, Input, message, Tag } from "antd";
 import { kycService } from "@/services/kyc.service";
 import { KYCData } from "@/types/kyc";
 

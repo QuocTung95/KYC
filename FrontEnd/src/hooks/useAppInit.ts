@@ -11,10 +11,10 @@ export const useAppInit = () => {
       const accessToken = cookies.getAccessToken();
       if (accessToken) {
         try {
-          await dispatch(getCurrentUser()).unwrap();
+          await dispatch(getCurrentUser());
         } catch (error) {
           // If getCurrentUser fails, the error will be handled in the slice
-          cookies.clearTokens(); // Clear invalid tokens
+          cookies.clearTokens();
         }
       }
     };

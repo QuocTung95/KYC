@@ -1,5 +1,5 @@
 import { Descriptions } from "antd";
-import type { Profile, User } from "@/types/user";
+import type { Profile } from "@/types/user";
 import dayjs from "dayjs";
 
 interface ProfileTemplateProps {
