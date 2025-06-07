@@ -16,7 +16,7 @@ const apiClient = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
-  withCredentials: true, // Important for cookies
+  withCredentials: false,
 });
 
 // Request interceptor
@@ -73,8 +73,7 @@ apiClient.interceptors.response.use(
     }
 
     // Handle other errors
-    const errorMessage =
-      error.response?.data?.message || error.message || "An error occurred";
+    const errorMessage = error.response?.data?.message || error.message || "An error occurred";
     message.error(errorMessage);
     return Promise.reject(error);
   }
