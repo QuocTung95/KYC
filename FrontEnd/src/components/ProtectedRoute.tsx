@@ -1,9 +1,5 @@
 import { Navigate, useLocation } from "react-router-dom";
-import { Spin } from "antd";
 import { useAppSelector } from "@hooks/useAppSelector";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { getUserProfile } from "@/store/slices/userSlice";
 import { UserRole } from "@/types/user";
 
 interface ProtectedRouteProps {
@@ -11,10 +7,7 @@ interface ProtectedRouteProps {
   allowedRoles?: UserRole[];
 }
 
-export const ProtectedRoute = ({
-  children,
-  allowedRoles,
-}: ProtectedRouteProps) => {
+export const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) => {
   const { user, initialized } = useAppSelector((state) => state.user);
   const location = useLocation();
 

@@ -63,7 +63,7 @@ export class UsersController {
     } catch (error) {
       if (error.code === '23505') {
         // PostgreSQL unique constraint violation
-        throw new ConflictException('Username already exists');
+        throw new ConflictException('Username or email already exist');
       }
       throw error;
     }

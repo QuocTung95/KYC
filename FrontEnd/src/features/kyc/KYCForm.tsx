@@ -1,8 +1,8 @@
 import { Form, Input, Select, Button, Space, Typography, InputNumber, Card, Divider } from "antd";
 import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
-import type { KYCData, Income, Asset, Liability, WealthSource } from "@/types/user";
-import { InvestmentExperience, RiskTolerance } from "@/types/user";
+
 import { useState } from "react";
+import { Asset, Income, InvestmentExperience, KYCData, Liability, RiskTolerance, WealthSource } from "@/types/kyc";
 
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -22,7 +22,7 @@ const formatCurrency = (value: number) =>
     maximumFractionDigits: 2,
   }).format(value);
 
-const KYCForm: React.FC<KYCFormProps> = ({ initialData, onSubmit, onCancel, loading = false }) => {
+const KYCForm: React.FC<KYCFormProps> = ({ initialData, onSubmit, onCancel }) => {
   const [form] = Form.useForm();
   const [netWorth, setNetWorth] = useState<number>(0);
 
@@ -315,7 +315,7 @@ const KYCForm: React.FC<KYCFormProps> = ({ initialData, onSubmit, onCancel, load
       {/* Submit/Cancel Buttons */}
       <Form.Item className="mt-6">
         <Space>
-          <Button type="primary" htmlType="submit" loading={loading}>
+          <Button type="primary" htmlType="submit">
             Submit
           </Button>
           <Button onClick={onCancel}>Cancel</Button>

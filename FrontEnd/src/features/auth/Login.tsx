@@ -13,7 +13,6 @@ interface LoginFormData {
 }
 
 const Login = () => {
-  //   const { user, loading } = useAppSelector((state) => state.user);
   const [logging, setLogging] = useState(false);
 
   const navigate = useNavigate();

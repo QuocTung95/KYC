@@ -2,12 +2,11 @@ import { useState, useEffect } from "react";
 import { Card, Typography, Tag, message, Descriptions, Space, Button, Divider } from "antd";
 import { EditOutlined } from "@ant-design/icons";
 import type { RootState } from "@/store";
-import { KYCStatus, type KYCData, type Income, type Asset, type Liability, type WealthSource } from "@/types/user";
-import { submitKYC, updateKYC } from "@/store/slices/kycSlice";
 import { kycService } from "@/services/kyc.service";
 import { useAppDispatch, useAppSelector } from "@/hooks";
 import { getUserProfile } from "@/store/slices/userSlice";
 import KYCForm from "./KYCForm";
+import { Asset, Income, KYCData, KYCStatus, Liability, WealthSource } from "@/types/kyc";
 
 const { Title, Text } = Typography;
 
@@ -26,7 +25,6 @@ const formatCurrency = (value: number) =>
 const KYC: React.FC<KYCProps> = ({ readOnly = false }) => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state: RootState) => state.user);
-  const { loading } = useAppSelector((state: RootState) => state.kyc);
   const [isEditing, setIsEditing] = useState(false);
   const [kycData, setKycData] = useState<KYCData | null>(null);
 
@@ -59,11 +57,11 @@ const KYC: React.FC<KYCProps> = ({ readOnly = false }) => {
   const onSubmit = async (values: KYCData) => {
     try {
       if (user?.kyc?.id) {
-        await dispatch(updateKYC({ id: user.kyc.id, data: values }));
+        await kycService.update(user.kyc.id, values);
         fetchKYCData(user.kyc.id);
         message.success("KYC updated successfully");
       } else {
-        const newKyc = await dispatch(submitKYC(values));
+        const newKyc = await kycService.create(values);
         fetchKYCData(newKyc.id);
         dispatch(getUserProfile());
         message.success("KYC submitted successfully");
@@ -193,7 +191,7 @@ const KYC: React.FC<KYCProps> = ({ readOnly = false }) => {
 
   return (
     <div className="container mx-auto py-8">
-      <Card loading={loading}>
+      <Card>
         <div className="flex justify-between items-center mb-6">
           <Title level={2}>KYC Form</Title>
           <Space>
@@ -211,7 +209,7 @@ const KYC: React.FC<KYCProps> = ({ readOnly = false }) => {
         </div>
 
         {isEditing || !user?.kyc ? (
-          <KYCForm initialData={kycData || undefined} onSubmit={onSubmit} onCancel={handleCancel} loading={loading} />
+          <KYCForm initialData={kycData || undefined} onSubmit={onSubmit} onCancel={handleCancel} />
         ) : (
           renderViewMode()
         )}

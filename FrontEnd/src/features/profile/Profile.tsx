@@ -65,7 +65,7 @@ const Profile = () => {
                 {new Intl.NumberFormat("en-US", {
                   style: "currency",
                   currency: "USD",
-                }).format(parseFloat(user.kyc.netWorth))}
+                }).format(parseFloat(user.kyc.netWorth.toLocaleString()))}
               </div>
             </div>
 

@@ -1,6 +1,7 @@
 import { IsEnum, IsOptional, IsString, Min, IsInt } from 'class-validator';
 import { Type } from 'class-transformer';
 import { UserRole } from '../../entities/user.entity';
+import { KYCStatus } from 'src/entities/kyc.entity';
 
 export class GetUsersDto {
   @IsOptional()
@@ -10,6 +11,10 @@ export class GetUsersDto {
   @IsOptional()
   @IsEnum(UserRole)
   role?: UserRole;
+
+  @IsOptional()
+  @IsEnum(KYCStatus)
+  status?: KYCStatus;
 
   @IsOptional()
   @Type(() => Number)

@@ -1,4 +1,4 @@
-import { Layout, Avatar, Dropdown, Space, Badge, Button, theme, Tag } from "antd";
+import { Layout, Avatar, Dropdown, Space, Button, theme, Tag } from "antd";
 import type { MenuProps } from "antd";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -75,7 +75,7 @@ const Header = ({ collapsed, onToggle }: HeaderProps) => {
                 <Tag color={getKycStatusColor(user.kyc.status)}>KYC {user.kyc.status}</Tag>
                 <div className="flex items-center gap-1">
                   <DollarOutlined />
-                  <span>{formatCurrency(user.kyc.netWorth)}</span>
+                  <span>{formatCurrency(user.kyc.netWorth.toLocaleString())}</span>
                 </div>
               </Space>
             </div>

@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { userService } from "@/services/user.service";
-import { UserRole, type User, type UserRoleType } from "@/types/user";
+import { SortOrder, UserFilters, UserRole, type User } from "@/types/user";
 import { cookies } from "@/utils/cookies";
 
 interface PaginationMeta {
@@ -9,15 +9,8 @@ interface PaginationMeta {
   total: number;
 }
 
-interface FilterState {
-  search: string;
-  sortBy: string;
-  sortOrder: "ASC" | "DESC";
-  role: UserRoleType;
-}
-
 interface UserState {
-  user: User | null;
+  user?: User;
   clients: User[];
   loading: boolean;
   loadingClientList: boolean;
@@ -25,11 +18,11 @@ interface UserState {
   isAuthenticated: boolean;
   initialized: boolean;
   pagination: PaginationMeta;
-  filters: FilterState;
+  filters: UserFilters;
 }
 
 const initialState: UserState = {
-  user: null,
+  user: undefined,
   clients: [],
   loading: false,
   loadingClientList: false,
@@ -44,30 +37,10 @@ const initialState: UserState = {
   filters: {
     search: "",
     sortBy: "createdAt",
-    sortOrder: "DESC",
+    sortOrder: SortOrder.ASC,
     role: UserRole.CLIENT,
   },
 };
-
-export const updateUserProfile = createAsyncThunk("users/updateProfile", async ({ userId, ...rest }: any) => {
-  const fullNameParts = [rest.firstName, rest.middleName, rest.lastName].filter(Boolean).join(" ");
-
-  const preferredEmail = rest.contactInfo?.find((c: any) => c.type === "EMAIL" && c.isPreferred)?.value;
-
-  const phone = rest.contactInfo?.find((c: any) => c.type === "PHONE")?.value;
-  const addressEntry = rest.addressInfo?.[0];
-  const body = {
-    fullName: fullNameParts || undefined,
-    email: preferredEmail || undefined,
-    phone: phone || undefined,
-    dateOfBirth: rest.dateOfBirth || undefined,
-    address: addressEntry?.street || undefined,
-    city: addressEntry?.city || undefined,
-    country: addressEntry?.country || undefined,
-  };
-  const response = await userService.updateProfile(userId, body);
-  return response;
-});
 
 export const getUserProfile = createAsyncThunk("users/me", async () => {
   const accessToken = cookies.getAccessToken();
@@ -83,19 +56,12 @@ export const getClientList = createAsyncThunk<any, void>("users/list", async (_,
   return response;
 });
 
-export const deleteClient = createAsyncThunk("users/delete", async (clientId: string, { dispatch }) => {
-  await userService.deleteClient(clientId);
-  // Refresh the client list after deletion
-  await dispatch(getClientList());
-  return clientId;
-});
-
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
     clearUser: (state) => {
-      state.user = null;
+      state.user = undefined;
       state.error = null;
       cookies.clearTokens();
     },
@@ -114,20 +80,6 @@ const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(updateUserProfile.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(updateUserProfile.fulfilled, (state, action) => {
-        state.loading = false;
-        if (state.user) {
-          state.user.profile = action.payload;
-        }
-      })
-      .addCase(updateUserProfile.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message || "Failed to update profile";
-      })
       .addCase(getUserProfile.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -159,17 +111,6 @@ const userSlice = createSlice({
       .addCase(getClientList.rejected, (state, action) => {
         state.loadingClientList = false;
         state.error = action.error.message || "Failed to fetch client list";
-      })
-      .addCase(deleteClient.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(deleteClient.fulfilled, (state) => {
-        state.loading = false;
-      })
-      .addCase(deleteClient.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message || "Failed to delete client";
       });
   },
 });

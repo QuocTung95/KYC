@@ -4,8 +4,9 @@ import { SearchOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@/hooks";
 import { getClientList, setFilters, setPagination } from "@/store/slices/userSlice";
-import type { KYC, User, UserFilters } from "@/types/user";
+import { SortOrder, type User, type UserFilters } from "@/types/user";
 import ProfileTemplate from "../profile/ProfileTemplate";
+import { KYCData } from "@/types/kyc";
 
 const { Option } = Select;
 
@@ -43,7 +44,7 @@ const ClientList = () => {
       dispatch(
         setFilters({
           sortBy: sorter.field,
-          sortOrder: sorter.order === "ascend" ? "asc" : "desc",
+          sortOrder: sorter.order === "ascend" ? SortOrder.ASC : SortOrder.DESC,
         })
       );
     }
@@ -75,7 +76,7 @@ const ClientList = () => {
       title: "Status",
       dataIndex: "kyc",
       width: "15%",
-      render: (kyc: KYC) => {
+      render: (kyc: KYCData) => {
         if (!kyc) {
           return <Tag>None</Tag>;
         }
@@ -85,6 +86,11 @@ const ClientList = () => {
           </Tag>
         );
       },
+    },
+    {
+      title: "Reject Reason",
+      dataIndex: ["kyc", "rejectReason"],
+      width: "15%",
     },
     {
       title: "Actions",

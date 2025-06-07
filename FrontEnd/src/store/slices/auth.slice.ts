@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import type { User } from "@/types/user";
 import { authService } from "@/services/auth.service";
 import { userService } from "@/services/user.service";
 import { getUserProfile } from "./userSlice";

@@ -1,55 +1,3 @@
-import { KYCData } from "./kyc";
-
-export interface Profile {
-  id: string;
-  fullName: string;
-  email: string;
-  phone: string;
-  dateOfBirth: string;
-  address: string;
-  city: string;
-  country: string;
-  nationality: string;
-  occupation: string;
-}
-
-export type UpdateProfileDto = Omit<Profile, "id">;
-
-export enum UserRole {
-  OFFICER = "OFFICER",
-  CLIENT = "USER",
-}
-export enum SortOrder {
-  ASC = "ASC",
-  DESC = "DESC",
-}
-export type UserRoleType = UserRole.CLIENT | UserRole.OFFICER;
-
-export enum UserStatus {
-  PENDING = "PENDING",
-  APPROVED = "APPROVED",
-  REJECTED = "REJECTED",
-}
-
-export interface UserFilters {
-  search?: string;
-  status?: string;
-  sortBy?: string;
-  sortOrder?: SortOrder.ASC | SortOrder.DESC;
-  role: UserRoleType;
-}
-
-export interface User {
-  id: string;
-  username: string;
-  role: UserRole;
-  status: UserStatus;
-  profile: Profile;
-  kyc?: KYCData;
-  createdAt: string;
-  updatedAt: string;
-}
-
 export enum InvestmentExperience {
   LESS_THAN_5_YEARS = "LESS_THAN_5_YEARS",
   BETWEEN_5_AND_10_YEARS = "BETWEEN_5_AND_10_YEARS",
@@ -95,4 +43,20 @@ export interface WealthSource {
   type: WealthSourceType;
   amount: number;
   description?: string;
+}
+
+export interface KYCData {
+  id: string;
+  userId: string;
+  incomes: Income[];
+  assets: Asset[];
+  liabilities: Liability[];
+  wealthSources: WealthSource[];
+  investmentExperience: InvestmentExperience;
+  riskTolerance: RiskTolerance;
+  netWorth: number;
+  status: KYCStatus;
+  reviewedAt: string | null;
+  reviewedBy: string | null;
+  rejectReason: string | null;
 }

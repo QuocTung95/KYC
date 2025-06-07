@@ -1,13 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { Repository, Like } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { User, UserRole } from '../entities/user.entity';
 import { Profile } from '../entities/profile.entity';
-import { KYC } from '../entities/kyc.entity';
 import { GetUsersDto } from './dto/get-users.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { CreateUserDto } from './dto/create-user.dto';
+import { DataSource } from 'typeorm';
 
 @Injectable()
 export class UsersService {
@@ -16,42 +16,44 @@ export class UsersService {
     private userRepository: Repository<User>,
     @InjectRepository(Profile)
     private profileRepository: Repository<Profile>,
+    @InjectDataSource()
+    private readonly dataSource: DataSource,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
     const { username, password, fullName, email, phone, ...rest } =
       createUserDto;
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create user
-    const user = this.userRepository.create({
-      username,
-      password: hashedPassword,
-      role: UserRole.USER,
-    });
-    await this.userRepository.save(user);
+    return await this.dataSource.transaction(async (manager) => {
+      const user = manager.getRepository(User).create({
+        username,
+        password: hashedPassword,
+        role: UserRole.USER,
+      });
+      await manager.getRepository(User).save(user);
 
-    // Create profile
-    const profile = this.profileRepository.create({
-      user,
-      fullName,
-      email,
-      phone,
-      dateOfBirth: new Date(),
-      address: '',
-      city: '',
-      country: '',
-      nationality: '',
-      occupation: '',
-    });
-    await this.profileRepository.save(profile);
+      const profile = manager.getRepository(Profile).create({
+        user,
+        fullName,
+        email,
+        phone,
+        dateOfBirth: new Date(),
+        address: '',
+        city: '',
+        country: '',
+        nationality: '',
+        occupation: '',
+      });
+      await manager.getRepository(Profile).save(profile);
 
-    // Return user with profile but without password
-    const { password: _, ...result } = user;
-    return {
-      ...result,
-      profile,
-    };
+      const { password: _, ...result } = user;
+      return {
+        ...result,
+        profile,
+      };
+    });
   }
 
   async findAll(query: GetUsersDto) {
@@ -62,6 +64,7 @@ export class UsersService {
       limit = 10,
       sortBy = 'createdAt',
       sortOrder = 'DESC',
+      status,
     } = query;
 
     const queryBuilder = this.userRepository
@@ -79,9 +82,13 @@ export class UsersService {
       );
     }
 
-    // Apply role filter
+    // Apply filter
     if (role) {
       queryBuilder.andWhere('user.role = :role', { role });
+    }
+
+    if (status) {
+      queryBuilder.andWhere('kyc.status = :status', { status });
     }
 
     // Apply sorting
@@ -119,14 +126,7 @@ export class UsersService {
 
     return {
       ...user,
-      kyc: user.kyc
-        ? {
-            id: user.kyc.id,
-            status: user.kyc.status,
-            reviewedAt: user.kyc.reviewedAt,
-            netWorth: user.kyc.netWorth,
-          }
-        : null,
+      kyc: user.kyc ? user.kyc : null,
     };
   }
 

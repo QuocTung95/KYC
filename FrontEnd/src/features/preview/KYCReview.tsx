@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Card, Descriptions, Button, Space, Typography, Modal, Input, message, Tag, Divider } from "antd";
 import { kycService } from "@/services/kyc.service";
-import type { KYCData } from "@/types/user";
+import { KYCData } from "@/types/kyc";
 
 const { Title, Text } = Typography;
 const { TextArea } = Input;
@@ -164,7 +164,7 @@ const KYCReview = () => {
         {/* Action Buttons */}
         {kycData.status === "PENDING" && (
           <div className="mt-8 flex justify-end space-x-4">
-            <Button onClick={() => navigate("/officer/clients")}>Cancel</Button>
+            <Button onClick={() => navigate("/preview")}>Cancel</Button>
             <Button danger onClick={() => setIsRejectModalOpen(true)}>
               Reject
             </Button>
