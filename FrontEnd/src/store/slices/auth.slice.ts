@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { authService } from "@/services/auth.service";
-import { userService } from "@/services/user.service";
-import { getUserProfile } from "./userSlice";
+import { getCurrentUser } from "./userSlice";
 
 interface AuthState {
   loading: boolean;
@@ -18,7 +17,7 @@ export const login = createAsyncThunk(
   async (credentials: { username: string; password: string }, { dispatch }) => {
     const response = await authService.login(credentials);
     // After successful login, fetch user profile
-    await dispatch(getUserProfile());
+    await dispatch(getCurrentUser());
     // Navigate based on user role
     if (response.user.role === "OFFICER") {
       window.location.href = "/preview";
@@ -32,11 +31,6 @@ export const login = createAsyncThunk(
 export const logout = createAsyncThunk("auth/logout", async () => {
   await authService.logout();
   window.location.href = "/login";
-});
-
-export const getCurrentUser = createAsyncThunk("auth/getCurrentUser", async () => {
-  const user = await userService.getCurrentUser();
-  return user;
 });
 
 export const authSlice = createSlice({

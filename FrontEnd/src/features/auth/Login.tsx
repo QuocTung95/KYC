@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Form, Input, Button, Card, Typography, message } from "antd";
 import { useNavigate, useLocation } from "react-router-dom";
 import { authService } from "@/services/auth.service";
-import { getUserProfile } from "@/store/slices/userSlice";
+import { getCurrentUser } from "@/store/slices/userSlice";
 import { useAppDispatch } from "@/hooks";
 
 const { Title } = Typography;
@@ -34,7 +34,7 @@ const Login = () => {
       await authService.login(values);
       message.success("Login successful!");
       navigate("/");
-      dispatch(getUserProfile());
+      dispatch(getCurrentUser());
     } finally {
       setLogging(false);
     }

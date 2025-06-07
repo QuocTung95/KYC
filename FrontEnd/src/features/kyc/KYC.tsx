@@ -4,7 +4,7 @@ import { EditOutlined } from "@ant-design/icons";
 import type { RootState } from "@/store";
 import { kycService } from "@/services/kyc.service";
 import { useAppDispatch, useAppSelector } from "@/hooks";
-import { getUserProfile } from "@/store/slices/userSlice";
+import { getCurrentUser } from "@/store/slices/userSlice";
 import KYCForm from "./KYCForm";
 import { Asset, Income, KYCData, KYCStatus, Liability, WealthSource } from "@/types/kyc";
 
@@ -63,7 +63,7 @@ const KYC: React.FC<KYCProps> = ({ readOnly = false }) => {
       } else {
         const newKyc = await kycService.create(values);
         fetchKYCData(newKyc.id);
-        dispatch(getUserProfile());
+        dispatch(getCurrentUser());
         message.success("KYC submitted successfully");
       }
     } finally {

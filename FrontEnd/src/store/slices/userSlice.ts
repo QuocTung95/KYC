@@ -42,7 +42,7 @@ const initialState: UserState = {
   },
 };
 
-export const getUserProfile = createAsyncThunk("users/me", async () => {
+export const getCurrentUser = createAsyncThunk("users/me", async () => {
   const accessToken = cookies.getAccessToken();
   if (!accessToken) return;
   const response = await userService.getCurrentUser();
@@ -80,17 +80,17 @@ const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getUserProfile.pending, (state) => {
+      .addCase(getCurrentUser.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(getUserProfile.fulfilled, (state, action) => {
+      .addCase(getCurrentUser.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload;
         state.isAuthenticated = true;
         state.initialized = true;
       })
-      .addCase(getUserProfile.rejected, (state, action) => {
+      .addCase(getCurrentUser.rejected, (state, action) => {
         state.loading = false;
         state.isAuthenticated = false;
         state.initialized = true;

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useAppDispatch } from "./useAppDispatch";
 import { cookies } from "@/utils/cookies";
-import { getCurrentUser } from "@/store/slices/auth.slice";
+import { getCurrentUser } from "@/store/slices/userSlice";
 
 export const useAppInit = () => {
   const dispatch = useAppDispatch();

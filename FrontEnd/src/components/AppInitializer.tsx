@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Spin } from "antd";
 import { useAppDispatch, useAppSelector } from "@/hooks";
-import { getUserProfile } from "@/store/slices/userSlice";
+import { getCurrentUser } from "@/store/slices/userSlice";
 import { Navigate } from "react-router-dom";
 
 interface AppInitializerProps {
@@ -14,7 +14,7 @@ export const AppInitializer = ({ children }: AppInitializerProps) => {
 
   useEffect(() => {
     if (!initialized) {
-      dispatch(getUserProfile());
+      dispatch(getCurrentUser());
     }
   }, [dispatch, initialized]);
 

@@ -8,10 +8,5 @@ export class LoginDto {
 
   @IsString()
   @IsNotEmpty()
-  @Length(12, 16, { message: 'Password must be between 12 and 16 characters' })
-  @Matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@#&!])[A-Za-z\d@#&!]{12,16}$/, {
-    message:
-      'Password must include letters, numbers, and special characters (@, #, &, !)',
-  })
   password: string;
 }
