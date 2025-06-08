@@ -43,7 +43,16 @@ apiClient.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    // Handle 401 Unauthorized error
+    const isLoginRequest = originalRequest.url?.includes("/auth/login");
+
+    // If login 401 → show error, don't call refresh token
+    if (error.response?.status === 401 && isLoginRequest) {
+      const errorMessage = error.response?.data?.message || "Incorrect username or password";
+      message.error(errorMessage);
+      return Promise.reject(error);
+    }
+
+    // Other request, call refresh token if need
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
@@ -53,19 +62,13 @@ apiClient.interceptors.response.use(
           throw new Error("No refresh token available");
         }
 
-        // Call refresh token endpoint
-        const response = await apiClient.post("/auth/refresh", {
-          refreshToken,
-        });
-
+        const response = await apiClient.post("/auth/refresh", { refreshToken });
         const { accessToken } = response.data;
         cookies.setAccessToken(accessToken);
 
-        // Retry original request with new token
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
         return apiClient(originalRequest);
       } catch (refreshError) {
-        // Clear tokens and show error
         cookies.clearTokens();
         message.error("Session expired. Please login again.");
         return Promise.reject(refreshError);
