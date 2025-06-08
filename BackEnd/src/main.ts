@@ -12,7 +12,7 @@ async function bootstrap() {
 
   // Enable CORS
   app.enableCors({
-    origin: ['https://kyc-seven-xi.vercel.app', 'http://localhost:3000/'],
+    origin: ['https://kyc-seven-xi.vercel.app', 'http://localhost:3000'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization'],
