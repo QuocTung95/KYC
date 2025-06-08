@@ -3,6 +3,8 @@ import type { UpdateProfileDto } from "@/types/user";
 import dayjs from "dayjs";
 import { countries } from "@/constants/countries";
 import { useState, useEffect } from "react";
+import { useAppDispatch } from "@/hooks";
+import { getCurrentUser } from "@/store/slices/userSlice";
 
 interface ProfileFormProps {
   initialData: any;
@@ -13,6 +15,7 @@ interface ProfileFormProps {
 
 const ProfileForm: React.FC<ProfileFormProps> = ({ initialData, onSubmit, onCancel, loading = false }) => {
   const [form] = Form.useForm();
+  const dispatch = useAppDispatch();
   const [selectedCountryCode, setSelectedCountryCode] = useState("+1"); // Default to US
 
   // Set initial country code from phone number if available
@@ -35,6 +38,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ initialData, onSubmit, onCanc
     // Combine country code with phone number
     const phoneNumber = `${selectedCountryCode}${values.phone.replace(/^0+/, "")}`;
     await onSubmit({ ...values, phone: phoneNumber });
+    dispatch(getCurrentUser());
   };
 
   // Get unique country codes for phone

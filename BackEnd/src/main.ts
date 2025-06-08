@@ -1,12 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
-import { Connection } from 'typeorm';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const connection = app.get(Connection);
-  await connection.runMigrations();
   // Enable CORS
   app.enableCors({
     origin: ['https://kyc-seven-xi.vercel.app'],
